@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ fo }}
+        {{ fo }}
   </div>
 </template>
 

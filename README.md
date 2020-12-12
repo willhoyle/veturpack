@@ -1,40 +1,24 @@
-# Veturpack
+# Repro for vetur
+issue: https://github.com/vuejs/vetur/issues/2559
 
-A Vue project with minimal setup and dependencies for trying out [Vetur](https://github.com/vuejs/vetur)'s features. Also used for creating minimal, reproducible case for Vetur bug reports.
+## how to repro
 
-## Usage
+```
+git clone git@github.com:willhoyle/veturpack.git
+cd veturpack
+sudo chmod -R 333 data # this will remove read access privileges for data folder
+code .
+```
 
-- Install latest version of [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
-- `git clone git@github.com:octref/veturpack.git`
-- `cd veturpack`
-- `yarn install`
-- `code .`
+Go to the Output tab in the terminal, you'll see something similar to the following error:
 
-## Things to Try
+```bash
+[Error - 1:04:28 PM] Request textDocument/documentSymbol failed.
+  Message: Request textDocument/documentSymbol failed with message: EACCES: permission denied, scandir '/home/will/projects/veturpack/data'
+  Code: -32603
+```
 
-Try all features below in `src/Test.vue`. You can read more about these features in Vetur's documentation: https://vuejs.github.io/vetur/.
+The status bar at the bottom of vs code will display: `Load project: /home/will/projects/veturpack` and never resolve. The vetur extension won't work in this state (formatting `.vue` files doesn't work)
 
-- Do an emmet expansion on the html template. For example, type `div` and then tab.
-- Complete on `<router|`. Because of the [`vue-router`](https://router.vuejs.org/) dependency, you should see [`router-link`](https://router.vuejs.org/api/#router-link). Read more about this feature in [Framework Support](https://vuejs.github.io/vetur/framework.html).
-- `yarn add element-ui`, reload the project and complete `<el`. You should see all tags from [Element UI](https://element.eleme.cn/#/en-US/component). Read more about this feature in [Framework Support](https://vuejs.github.io/vetur/framework.html).
-- Complete on `<foo`. You should see `<foo-tag>`. Read more about this feature in [Framework Support](https://vuejs.github.io/vetur/framework.html).
-- Hover over any tags such as `<div>` or `<router-link>`. You'll see the tag's description.
-- Because of `"vetur.experimental.templateInterpolationService": true` in `.vscode/settings.json`, you should see an error on `{{ fo }}` in the template section. Change it to `foo` to fix the error.
-- Delete the `foo` in {{ foo }}`. Type `b`. You should see completion of `bar`.
-- In script section, try `_.`. You should see all [lodash](https://lodash.com)'s methods.
-- Install another library with types, such as [jquery](https://api.jquery.com/). `yarn add -S jquery && yarn add -D @types/jquery`. After importing it with `import * as $ from 'jquery'`, you should get `$.` completions.
-- Setup [eslint-plugin-vue](https://eslint.vuejs.org/user-guide/) with a `.eslintrc`. Set `"vetur.validation.template": false` to turn off Vetur's builtin ESLint linter. You'll get ESLint warnings now.
-- In `<script>` section, add `//@ts-check`. Write some type-unsafe code, such as `let a = 'a'; a = 5`. You'll see an error.
-- F1 -> Format the document. You can [configure](https://vuejs.github.io/vetur/formatting.html) the formatters and their settings as well.
-- In `.prettierrc.json`, set `"singleQuote": true` and format again.
-- Type `<style scss` and tab to choose a snippet. You should get a SCSS section setup. These snippets are [customizable](https://vuejs.github.io/vetur/snippet.html). 
-- Try some CSS completions in the `<style lang="scss">` section.
-- Make some errors in the Vue file and run [vti](https://vuejs.github.io/vetur/vti.html) — you should see all diagnostics printed on CLI.
-
-## Next
-
-For a more comprehensive setup, refer to https://github.com/chrisvfritz/vue-enterprise-boilerplate.
-
-## License
-
-MIT
+## Expected behaviour
+vetur should ignore folders it has no read access to (or outputs a warning message instead of error)
